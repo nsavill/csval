@@ -4,19 +4,19 @@ const program = require("commander");
 
 const pkg = require("../package.json");
 const readCsv = require("./readCsv");
-const readRules = require("./readRules");
+const readSchema = require("./readSchema");
 const parseCsv = require("./parseCsv");
 const validate = require("./validate");
 
 program.version(pkg.version);
 
-const main = async (csvFile, rulesFile) => {
+const main = async (csvPath, schemaPath) => {
   try {
-    const csv = await readCsv(csvFile);
-    const rules = rulesFile ? await readRules(rulesFile) : {};
+    const csv = await readCsv(csvPath);
+    const schema = schemaPath ? await readSchema(schemaPath) : null;
     const parsed = await parseCsv(csv);
 
-    await validate(parsed, rules);
+    if (schema) validate(parsed, schema);
 
     process.stdout.write("The CSV file meets all validation checks.\n");
   } catch (err) {
@@ -25,7 +25,7 @@ const main = async (csvFile, rulesFile) => {
   }
 };
 
-program.arguments("<csvFile> [rules]").action(main);
+program.arguments("<csvPath> [schemaPath]").action(main);
 
 program.parse(process.argv);
 

@@ -1,7 +1,0 @@
-{
-  "properties": {
-    "salary": {
-      "type": "number"
-    }
-  }
-}
